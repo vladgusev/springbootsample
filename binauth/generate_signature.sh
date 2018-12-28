@@ -7,11 +7,15 @@ GENERATED_PAYLOAD="generated_payload.json"
 GENERATED_SIGNATURE="generated_signature.pgp"
 PRIVATE_KEY_FILE="/etc/attest-volume/my-private-key.asc"
 PUBLIC_KEY_FILE="generated-key.pgp"
+SVC_ACCT="/etc/sa-volume/key.json"
 
 IMAGE_PATH="us.gcr.io/${PROJECT_ID}/microservicesample"
 IMAGE_DIGEST="$(gcloud container images list-tags --format='get(digest)' $IMAGE_PATH | head -1)"
 
 rm ${GENERATED_PAYLOAD}
+
+gcloud auth activate-service-account --key-file=${SVC_ACCT} --no-user-output-enabled
+
 gcloud beta container binauthz create-signature-payload \
     --artifact-url="${IMAGE_PATH}@${IMAGE_DIGEST}" > ${GENERATED_PAYLOAD}
 
