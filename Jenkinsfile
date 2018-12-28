@@ -7,6 +7,8 @@ node {
       // ** NOTE: This 'M3' Maven tool must be configured
       // **       in the global configuration.
       mvnHome = tool 'M3'
+      sh 'gcloud components update'
+      sh 'gcloud components install beta'
       sh 'mkdir tmp-docker-build-context'
       sh "mkdir -p tmp-docker-build-context/cdbg"
       sh "cp -r Dockerfile tmp-docker-build-context"
@@ -21,6 +23,7 @@ node {
       } else {
          bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
       }
+      junit '**/target/surefire-reports/TEST-*.xml'
    }
 
 
@@ -46,17 +49,12 @@ node {
 
      }
 
-     stage('Publish MetaData') {
-
-      junit '**/target/surefire-reports/TEST-*.xml'
-      archive 'target/*.jar'
-     }
-
+     
      stage('Attest Branch Image') {
 
           sh "./binauth/generate_signature.sh"
 
-    
+
     }
 
 }
