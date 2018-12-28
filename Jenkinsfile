@@ -53,15 +53,10 @@ node {
      }
 
      stage('Attest Branch Image') {
-      when {
-        not{
-          buildingTag()
-        }
-      }
-      steps {
+
           sh "./binauth/generate_signature.sh"
 
-      }
+    
     }
 
 }
