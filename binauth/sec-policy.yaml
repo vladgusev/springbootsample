@@ -1,0 +1,12 @@
+name: projects/inbound-rune-cicdtaw/policy
+admissionWhitelistPatterns:
+  - namePattern: gcr.io/google_containers/*
+  - namePattern: gcr.io/google-containers/*
+  - namePattern: k8s.gcr.io/*
+  - namePattern: gcr.io/stackdriver-agents/*
+  - namePattern: gcr.io/cloud-solutions-images/jenkins-k8s-slave
+defaultAdmissionRule:
+    evaluationMode: REQUIRE_ATTESTATION
+    enforcementMode: ENFORCED_BLOCK_AND_AUDIT_LOG
+    requireAttestationsBy:
+     - projects/inbound-rune-cicdtaw/attestors/secops-attestor
