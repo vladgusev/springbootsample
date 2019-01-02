@@ -1,5 +1,6 @@
 node {
    def mvnHome
+   stages {
    stage('Preparation') { // for display purposes
       // Get some code from a GitHub repository
       git 'https://github.com/arunneoz/springbootsample.git'
@@ -51,10 +52,19 @@ node {
 
      
      stage('Attest Branch Image') {
-
+        
+        when {
+        not{
+          buildingTag()
+          }
+        }
+        steps {
+        container('gcloud') {
           sh "./binauth/generate_signature.sh"
+        }
+      }
 
-
-    }
+          
+  }
 
 }
