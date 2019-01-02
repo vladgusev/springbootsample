@@ -6,6 +6,8 @@ pipeline  {
    
    stages {
    stage('Preparation') { // for display purposes
+      
+      steps {
       // Get some code from a GitHub repository
       git 'https://github.com/arunneoz/springbootsample.git'
       // Get the Maven tool.
@@ -21,8 +23,12 @@ pipeline  {
       sh "cp -r cdbg tmp-docker-build-context/cdbg"
       def output = sh returnStdout: true, script: 'ls -l tmp-docker-build-context'
       echo output
+      }
+      
    }
    stage('UnitTest & Build') {
+      
+      steps {
       // Run the maven build
       if (isUnix()) {
          sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
@@ -30,6 +36,7 @@ pipeline  {
          bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
       }
       junit '**/target/surefire-reports/TEST-*.xml'
+      }
    }
 
 
@@ -39,6 +46,7 @@ pipeline  {
       //sh "cp target/project.war ./tmp-docker-build-context"
 
       // Build and push image with Jenkins' docker-plugin
+      steps {
        tag = sh (
       script: 'git rev-parse --short HEAD',
       returnStdout: true
@@ -52,6 +60,7 @@ pipeline  {
           def image = docker.build("us.gcr.io/inbound-rune-cicdtaw/microservicesample:${tag}", "--build-arg PACKAGE_VERSION=${tag} tmp-docker-build-context")
           image.push()
           }
+      }
 
      }
 
