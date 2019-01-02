@@ -1,5 +1,9 @@
-node {
-   def mvnHome
+pipeline  {
+   
+   options {
+      skipDefaultCheckout true //Workaround for bug in Kubernetes Plugin JENKINS-52885
+   }
+   
    stages {
    stage('Preparation') { // for display purposes
       // Get some code from a GitHub repository
@@ -7,6 +11,7 @@ node {
       // Get the Maven tool.
       // ** NOTE: This 'M3' Maven tool must be configured
       // **       in the global configuration.
+      def mvnHome
       mvnHome = tool 'M3'
       sh 'gcloud components update'
       sh 'gcloud components install beta'
