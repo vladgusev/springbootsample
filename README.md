@@ -1,3 +1,4 @@
+```
 #Setup on Ubuntu 
 PROJECT_ID=$PROJECT_ID
 GCP_REGION=us-central1
@@ -64,3 +65,4 @@ gcloud container clusters get-credentials gke-cluster --region $GCP_REGION --pro
 
 #Get Jenkins credentials
 kubectl get secret --namespace cicd jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode;echo
+```
